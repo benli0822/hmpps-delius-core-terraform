@@ -40,7 +40,7 @@ module "delius_db_3" {
     oracle_dbca_template_file     = "${var.ansible_vars_oracle_db["oracle_dbca_template_file"]}"
     s3_oracledb_backups_arn       = "${data.terraform_remote_state.s3-oracledb-backups.s3_oracledb_backups.arn}"
     database_type                 = "standby" # required for the DB module. This file is where the property is set.
-
+    database_standby_number       = "2"
     ## the following are retrieved from SSM Parameter Store
     ## oradb_sys_password            = "/${environment_name}/${project}/delius-database/db/oradb_sys_password"
     ## oradb_system_password         = "/${environment_name}/${project}/delius-database/db/oradb_system_password"

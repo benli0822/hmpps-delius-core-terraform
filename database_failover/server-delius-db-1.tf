@@ -39,6 +39,7 @@ module "delius_db_1" {
     database_characterset         = "${var.ansible_vars_oracle_db["database_characterset"]}"
     oracle_dbca_template_file     = "${var.ansible_vars_oracle_db["oracle_dbca_template_file"]}"
     database_type                 = "primary" # required for the DB module. This file is where the property is set.
+    database_standby_number       = "0"
     dependencies_bucket_arn       = "${var.dependencies_bucket_arn}"
     s3_oracledb_backups_arn       = "${data.terraform_remote_state.s3-oracledb-backups.s3_oracledb_backups.arn}"
     database_bootstrap_restore    = "${var.ansible_vars_oracle_db["database_bootstrap_restore"]}"

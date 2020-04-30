@@ -76,6 +76,7 @@ cat << EOF > ~/requirements.yml
   src: singleplatform-eng.users
 - name: oracle-db
   src: https://github.com/ministryofjustice/hmpps-delius-core-oracledb-bootstrap.git
+  version: ALS-469
 - name: oracle-db-patches
   src: https://github.com/ministryofjustice/hmpps-oracle-database-patches.git
 EOF

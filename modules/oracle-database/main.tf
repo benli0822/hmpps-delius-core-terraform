@@ -7,6 +7,7 @@ data "template_file" "user_data" {
     short_env_identifier = "${var.short_environment_identifier}"
     region               = "${var.region}"
     server_name          = "${var.server_name}"
+    server_name_         = "${replace(var.server_name, "-", "_")}" # server name hyphen to underscore
     app_name             = "${element(split("-", var.server_name), 0)}" # delius-db-1 -> delius - misboe-db-2 -> misboe
     route53_sub_domain   = "${var.environment_name}"
     private_domain       = "${var.private_domain}"

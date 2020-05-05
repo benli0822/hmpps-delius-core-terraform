@@ -84,11 +84,15 @@ cat << EOF > ~/requirements_db.yml
 ---
 - name: oracle-db
   src: https://github.com/ministryofjustice/hmpps-delius-core-oracledb-bootstrap.git
+  version: ALS-469
 - name: oracle-db-patches
-  src: https://github.com/ministryofjustice/hmpps-oracle-database-patches.git 
+  src: https://github.com/ministryofjustice/hmpps-oracle-database-patches.git
 EOF
 
 /usr/bin/curl -o ~/users.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-delius-ansible/master/group_vars/${bastion_inventory}.yml
+
+/usr/bin/curl -o ~/all.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/master/${route53_sub_domain}/ansible/group_vars/all.yml
+/usr/bin/curl -o ~/${server_name_}.yml https://raw.githubusercontent.com/ministryofjustice/hmpps-env-configs/master/${route53_sub_domain}/ansible/group_vars/${server_name_}.yml
 
 cat << EOF > ~/vars.yml
 region: "${region}"
@@ -125,6 +129,7 @@ cat << EOF > ~/bootstrap_users.yml
   vars_files:
    - "{{ playbook_dir }}/vars.yml"
    - "{{ playbook_dir }}/users.yml"
+   #- "{{ playbook_dir }}/${server_name_}.yml"
   roles:
      - bootstrap
      - users
@@ -136,6 +141,7 @@ cat << EOF > ~/bootstrap_db.yml
   vars_files:
    - "{{ playbook_dir }}/vars.yml"
    - "{{ playbook_dir }}/users.yml"
+   #- "{{ playbook_dir }}/${server_name_}.yml"
   roles:
      - oracle-db
 EOF

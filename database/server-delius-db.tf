@@ -1,6 +1,7 @@
-module "delius_db" {
-  source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git?ref=master//modules//oracle-database"
-  server_name = "delius-db"
+module "delius_db_1" {
+  #source      = "git::https://github.com/ministryofjustice/hmpps-oracle-database.git?ref=master//modules//oracle-database"
+  source      = "../modules/oracle-database"
+  server_name = "oracle"
 
   ami_id               = "${data.aws_ami.centos_oracle_db.id}"
   db_subnet            = "${data.terraform_remote_state.vpc.vpc_db-subnet-az1}"
@@ -15,7 +16,7 @@ module "delius_db" {
     "${data.terraform_remote_state.vpc_security_groups.sg_delius_core_db_in_from_mis_id}",
   ]
 
-  tags                         = "${var.tags}"
+  tags                         = "${local.tags}"
   environment_name             = "${data.terraform_remote_state.vpc.environment_name}"
   bastion_inventory            = "${data.terraform_remote_state.vpc.bastion_inventory}"
   project_name                 = "${var.project_name}"
@@ -27,7 +28,7 @@ module "delius_db" {
 
   kms_key_id      = "${data.terraform_remote_state.key_profile.kms_arn_app}"
   public_zone_id  = "${data.terraform_remote_state.vpc.public_zone_id}"
-  private_zone_id = "${data.terraform_remote_state.vpc.public_zone_id}"
+  private_zone_id = "${data.terraform_remote_state.vpc.private_zone_id}"
   private_domain  = "${data.terraform_remote_state.vpc.private_zone_name}"
   vpc_account_id  = "${data.terraform_remote_state.vpc.vpc_account_id}"
   db_size         = "${var.db_size_delius_core}"
@@ -38,7 +39,7 @@ module "delius_db" {
     database_sid                  = "${var.ansible_vars_oracle_db["database_sid"]}"
     database_characterset         = "${var.ansible_vars_oracle_db["database_characterset"]}"
     oracle_dbca_template_file     = "${var.ansible_vars_oracle_db["oracle_dbca_template_file"]}"
-    database_type                 = "standalone" # required for the DB module. This file is where the property is set.
+    database_type                 = "primary" # required for the DB module. This file is where the property is set.
     dependencies_bucket_arn       = "${var.dependencies_bucket_arn}"
     s3_oracledb_backups_arn       = "${data.terraform_remote_state.s3-oracledb-backups.s3_oracledb_backups.arn}"
     database_bootstrap_restore    = "${var.ansible_vars_oracle_db["database_bootstrap_restore"]}"
@@ -55,34 +56,34 @@ module "delius_db" {
 }
 
 #legacy (used for info only)
-output "ami_delius_db" {
-  value = "${module.delius_db.ami_id}"
+output "ami_delius_db_1" {
+  value = "${module.delius_db_1.ami_id}"
 }
 
-output "public_fqdn_delius_db" {
-  value = "${module.delius_db.public_fqdn}"
+output "public_fqdn_delius_db_1" {
+  value = "${module.delius_db_1.public_fqdn}"
 }
 
-output "internal_fqdn_delius_db" {
-  value = "${module.delius_db.internal_fqdn}"
+output "internal_fqdn_delius_db_1" {
+  value = "${module.delius_db_1.internal_fqdn}"
 }
 
-output "private_ip_delius_db" {
-  value = "${module.delius_db.private_ip}"
+output "private_ip_delius_db_1" {
+  value = "${module.delius_db_1.private_ip}"
 }
 
-output "db_disks_delius_db" {
-  value = "${module.delius_db.db_size_parameters}"
+output "db_disks_delius_db_1" {
+  value = "${module.delius_db_1.db_size_parameters}"
 }
 
 # map (tidier)
-output "delius_db" {
+output "delius_db_1" {
   value = {
-    ami_id        = "${module.delius_db.ami_id}",
-    public_fqdn   = "${module.delius_db.public_fqdn}",
-    internal_fqdn = "${module.delius_db.internal_fqdn}",
-    private_ip    = "${module.delius_db.private_ip}",
-    db_disks      = "${module.delius_db.db_size_parameters}",
-    delius_db   = "ssh ${module.delius_db.public_fqdn}",
+    ami_id        = "${module.delius_db_1.ami_id}",
+    public_fqdn   = "${module.delius_db_1.public_fqdn}",
+    internal_fqdn = "${module.delius_db_1.internal_fqdn}",
+    private_ip    = "${module.delius_db_1.private_ip}",
+    db_disks      = "${module.delius_db_1.db_size_parameters}",
+    delius_db_1   = "ssh ${module.delius_db_1.public_fqdn}",
   }
 }

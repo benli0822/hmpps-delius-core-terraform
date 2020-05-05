@@ -93,7 +93,7 @@ data "aws_ami" "centos_oracle_db" {
 
   filter {
     name   = "name"
-    values = ["HMPPS Delius-Core OracleDB master *"]
+    values = ["HMPPS Delius-Core OracleDB ALS-469"]
   }
 
   filter {
@@ -105,4 +105,12 @@ data "aws_ami" "centos_oracle_db" {
     name   = "root-device-type"
     values = ["ebs"]
   }
+}
+
+#Overide autostop tag
+locals {
+  tags = "${merge(
+    var.tags,
+    map("autostop-${var.environment_type}", "Phase1")
+  )}"
 }
